@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <title>miku miku</title>
-        <meta property="og:title" content="miku miku!" />
-	<link rel="icon" type="image/png" href="https://ooo.eeeee.ooo/miku-plush.png" />
-	<meta property="og:description" content="oo ee oo!" />
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content="https://ooo.eeeee.ooo" />
-        <meta property="og:image" content="https://ooo.eeeee.ooo/miku-preview.jpg" />
+        <meta property="og:title" content="miku miku!">
+	    <link rel="icon" type="image/png" href="https://ooo.eeeee.ooo/miku-plush.png">
+	    <meta property="og:description" content="oo ee oo!">
+        <meta property="og:type" content="website">
+        <meta property="og:url" content="https://ooo.eeeee.ooo">
+        <meta property="og:image" content="https://ooo.eeeee.ooo/miku-preview.jpg">
 
         <style>
             @font-face {
@@ -26,6 +27,15 @@
                 left: 50%;
                 min-width: 100%;
                 min-height: 100%;
+                object-fit: cover;
+            }
+            #horizontal-video {
+                transform: translate(-50%, -50%);
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                max-width: 100%;
+                max-height: 100%;
                 object-fit: cover;
             }
             #autoplay-modal {
@@ -68,6 +78,9 @@
             <video autoplay muted loop id="main-video">
                <source src="./oooeeeeeooo.mp4" type="video/mp4">
             </video>
+            <video autoplay muted loop id="horizontal-video">
+               <source src="./mikuhorizontal.mp4" type="video/mp4">
+            </video>
         </div>
         <div id="autoplay-modal">
             <div id="autoplay-modal-inner">
@@ -75,18 +88,48 @@
             </div>
         </div>
         <div id="credits">
-            <p><a href="https://www.youtube.com/watch?v=2oa5WCUpwD8">video</a></p>
+            <p><a id="credit-video" href="https://www.youtube.com/watch?v=2oa5WCUpwD8">video</a></p>
             <p><a href="https://github.com/ifd3f/ooo.eeeee.ooo">code</a></p>
         </div>
         <script>
+
             const apmodal = document.getElementById("autoplay-modal");
             const video = document.getElementById("main-video");
+            const horizontalVideo = document.getElementById("horizontal-video");
             apmodal.onclick = function () {
                 console.log("ooo eee ooo!");
                 document.body.className = "after-modal";
+                video.play();
+                horizontalVideo.play();
                 video.currentTime = 0;
+                horizontalVideo.currentTime = 0;
                 video.muted = false;
             };
+
+            var isHorizontal
+
+            function checkHorizontal () {
+                if ((window.innerHeight < window.innerWidth) && (isHorizontal !== true)) {
+                    isHorizontal = true
+                    document.getElementById("main-video").style.display = "none"
+                    document.getElementById("horizontal-video").style.display = "block"
+                    document.getElementById("credit-video").setAttribute("href", "https://www.youtube.com/watch?v=_-2dIuV34cs")
+                    console.log("Changed to horizontal", isHorizontal)
+                } else if ((window.innerHeight > window.innerWidth) && (isHorizontal !== false)) {
+                    isHorizontal = false
+                    document.getElementById("main-video").style.display = "block"
+                    document.getElementById("horizontal-video").style.display = "none"
+                    document.getElementById("credit-video").setAttribute("href", "https://www.youtube.com/watch?v=2oa5WCUpwD8")
+                    console.log("Changed to vertical", isHorizontal)
+                };
+            }
+
+            checkHorizontal()
+
+            window.addEventListener("resize", function() {
+                checkHorizontal()
+            }, true); 
+
         </script>
     </body>
 </html>
